@@ -422,11 +422,15 @@ function renderDashboard() {
         border-radius:8px;padding:10px 10px;color:#e8eaf0;font-size:13px;outline:none;">
       <div style="position:absolute;top:-8px;left:6px;font-size:10px;background:#0f1117;padding:0 3px;color:#64748b;">${t().senderName}</div>
     </div>
-    <input id="notice-input" value="${esc(state.newNotice)}" placeholder="${t().noticePh}"
-      oninput="state.newNotice=this.value" onkeydown="if(event.key==='Enter')submitNotice()" style="flex:1;">
-    <button class="btn-primary" onclick="submitNotice()" ${!state.senderName?'disabled style="opacity:0.5;cursor:not-allowed;"':''}>${t().send}</button>
+    <input id="notice-input" placeholder="${t().noticePh}"
+      onkeydown="if(event.key==='Enter')submitNotice()" style="flex:1;">
+    <button id="notice-send-btn" class="btn-primary" onclick="submitNotice()"
+      ${!state.senderName?'disabled':''}
+      style="${!state.senderName?'opacity:0.5;cursor:not-allowed;':''}">${t().send}</button>
   </div>
-  ${!state.senderName?`<div style="font-size:11px;color:#f59e0b;margin-bottom:8px;">⚠️ ${state.lang==='en'?'Please enter your name first':'名前を入力してから送信できます'}</div>`:''}
+  <div id="sender-warn" style="font-size:11px;color:#f59e0b;margin-bottom:8px;display:${state.senderName?'none':'block'};">
+    ⚠️ ${state.lang==='en'?'Please enter your name first':'名前を入力してから送信できます'}
+  </div>
   ${[...state.notices].sort((a,b)=>(b.important?1:0)-(a.important?1:0)).map(n=>`
   <div style="background:${n.important?'#2d1f0a':'#1a1d2e'};border:1px solid ${n.important?'#f59e0b44':'#ffffff11'};
     border-radius:8px;padding:10px 14px;margin-bottom:8px;">
@@ -934,7 +938,15 @@ function togglePwa() { state.showPwa=!state.showPwa; render(); }
 function saveSenderName(v) {
   state.senderName = v.trim();
   localStorage.setItem('tcrest-sender', state.senderName);
-  render();
+  // 送信ボタンの状態だけ更新（re-renderしない）
+  const btn = document.getElementById('notice-send-btn');
+  const warn = document.getElementById('sender-warn');
+  if(btn) {
+    btn.disabled = !state.senderName;
+    btn.style.opacity = state.senderName ? '1' : '0.5';
+    btn.style.cursor = state.senderName ? 'pointer' : 'not-allowed';
+  }
+  if(warn) warn.style.display = state.senderName ? 'none' : 'block';
 }
 function toggleNoticePin(id) {
   const n = state.notices.find(x=>x.id===id);
