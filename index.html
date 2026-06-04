@@ -456,10 +456,10 @@ function renderSites() {
       <button class="btn-primary" onclick="openModal('addSite')">${t().addSite}</button>
     </div>
     <div style="display:flex;background:#1a1d2e;border-radius:10px;padding:4px;margin-bottom:14px;gap:4px;">
-      <button class="subtab-btn ${state.siteView==='gantt'?'active':''}" onclick="state.siteView='gantt';render()">
+      <button class="subtab-btn ${state.siteView==='gantt'?'active':''}" onclick="setSiteView('gantt')">
         📅 ${t().gantt}
       </button>
-      <button class="subtab-btn ${state.siteView==='list'?'active':''}" onclick="state.siteView='list';render()">
+      <button class="subtab-btn ${state.siteView==='list'?'active':''}" onclick="setSiteView('list')">
         📋 ${t().list}
       </button>
     </div>
@@ -587,7 +587,7 @@ function renderSiteDetail(site) {
     : esc(site.name);
   return `
   <button style="background:none;border:none;color:#f59e0b;cursor:pointer;font-size:14px;margin-bottom:12px;padding:0;display:flex;align-items:center;gap:4px;"
-    onclick="state.selectedSite=null;render()">${t().backToList}</button>
+    onclick="goBack()">${t().backToList}</button>
   <div style="background:linear-gradient(135deg,#1e2235,#161926);border-radius:12px;padding:16px;margin-bottom:14px;border-left:4px solid ${color};">
     <div style="display:flex;justify-content:space-between;">
       <h2 style="font-size:16px;font-weight:800;flex:1;margin-right:8px;">${nameHtml}</h2>
@@ -626,7 +626,7 @@ function renderTaskList(site) {
         <span style="font-size:13px;color:#fca5a5;">${t().delConfirm}</span>
         <div style="display:flex;gap:6px;">
           <button style="padding:5px 12px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-            onclick="state.confirmDeleteTask=null;render()">${t().cancel}</button>
+            onclick="setConfirmDeleteTask(null)">${t().cancel}</button>
           <button style="padding:5px 12px;border-radius:6px;border:none;background:#ef4444;color:#fff;cursor:pointer;font-size:12px;font-weight:700;"
             onclick="deleteTask(${site.id},${task.id})">${t().del}</button>
         </div>
@@ -639,7 +639,7 @@ function renderTaskList(site) {
         <button class="btn-primary" style="padding:6px 12px;font-size:12px;"
           onclick="saveTaskEdit(${site.id},${task.id})">${t().save}</button>
         <button style="padding:6px 10px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-          onclick="state.editingTask=null;render()">${t().cancel}</button>
+          onclick="setEditingTask(null)">${t().cancel}</button>
       </div>`;
     return `
       <div class="task-row" style="background:${task.done?'#0d1f0d':'#1a1d2e'};border:1px solid ${task.done?'#22c55e33':'#ffffff11'};">
@@ -649,8 +649,8 @@ function renderTaskList(site) {
         </span>
         ${task.assignee?`<span style="font-size:11px;color:#94a3b8;background:#1e2235;padding:2px 8px;border-radius:20px;white-space:nowrap;">${esc(task.assignee)}</span>`:''}
         <div style="display:flex;gap:4px;flex-shrink:0;">
-          <button class="btn-icon" onclick="state.editingTask=${task.id};render()" title="${t().edit}">✏️</button>
-          <button class="btn-icon danger" onclick="state.confirmDeleteTask=${task.id};render()" title="${t().del}">🗑</button>
+          <button class="btn-icon" onclick=\"setEditingTask(\${task.id})\" title="${t().edit}">✏️</button>
+          <button class="btn-icon danger" onclick=\"setConfirmDeleteTask(\${task.id})\" title="${t().del}">🗑</button>
         </div>
       </div>`;
   }).join('')}`;
@@ -677,7 +677,7 @@ function renderSiteToolList(site) {
         <span style="font-size:13px;color:#fca5a5;">${t().delConfirm}</span>
         <div style="display:flex;gap:6px;">
           <button style="padding:5px 12px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-            onclick="state.confirmDeleteNeed=null;render()">${t().cancel}</button>
+            onclick="setConfirmDeleteNeed(null)">${t().cancel}</button>
           <button style="padding:5px 12px;border-radius:6px;border:none;background:#ef4444;color:#fff;cursor:pointer;font-size:12px;font-weight:700;"
             onclick="deleteSiteToolNeed(${site.id},${need.id})">${t().del}</button>
         </div>
@@ -694,7 +694,7 @@ function renderSiteToolList(site) {
           <div style="font-size:20px;font-weight:900;color:#f59e0b;">${need.qty}</div>
           <div style="font-size:10px;color:#64748b;">${t().needed}</div>
         </div>
-        <button class="btn-icon danger" onclick="state.confirmDeleteNeed=${need.id};render()">🗑</button>
+        <button class="btn-icon danger" onclick=\"setConfirmDeleteNeed(\${need.id})\">🗑</button>
       </div>`;
   }).join('')}`;
 }
@@ -716,8 +716,8 @@ function renderTools() {
     <button class="btn-primary" onclick="openModal('addTool')">${t().addTool}</button>
   </div>` : `
   ${cats.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
-    <button class="filter-btn ${state.toolFilter==='__all__'?'active':''}" onclick="state.toolFilter='__all__';render()">${t().all}</button>
-    ${cats.map(c=>`<button class="filter-btn ${state.toolFilter===c?'active':''}" onclick="state.toolFilter='${esc(c)}';render()">${esc(c)}</button>`).join('')}
+    <button class="filter-btn ${state.toolFilter==='__all__'?'active':''}" onclick="setToolFilter('__all__')">${t().all}</button>
+    ${cats.map(c=>`<button class="filter-btn ${state.toolFilter===c?'active':''}" onclick=\"setToolFilter('${esc(c)}')\">${esc(c)}</button>`).join('')}
   </div>`:''}
   <div>
   ${filtered.map(tool => {
@@ -726,7 +726,7 @@ function renderTools() {
         <span style="font-size:13px;color:#fca5a5;">${t().delToolConfirm}</span>
         <div style="display:flex;gap:6px;">
           <button style="padding:5px 12px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-            onclick="state.confirmDeleteTool=null;render()">${t().cancel}</button>
+            onclick="setConfirmDeleteTool(null)">${t().cancel}</button>
           <button style="padding:5px 12px;border-radius:6px;border:none;background:#ef4444;color:#fff;cursor:pointer;font-size:12px;font-weight:700;"
             onclick="deleteTool(${tool.id})">${t().del}</button>
         </div>
@@ -744,7 +744,7 @@ function renderTools() {
         <div style="display:flex;gap:8px;">
           <button class="btn-primary" style="padding:7px 16px;font-size:12px;" onclick="saveToolEdit(${tool.id})">${t().save}</button>
           <button style="padding:7px 12px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-            onclick="state.editingTool=null;render()">${t().cancel}</button>
+            onclick="setEditingTool(null)">${t().cancel}</button>
         </div>
       </div>`;
     return `
@@ -759,8 +759,8 @@ function renderTools() {
           <div style="font-size:10px;color:#64748b;">${t().total}</div>
         </div>
         <div style="display:flex;gap:4px;flex-shrink:0;">
-          <button class="btn-icon" onclick="state.editingTool=${tool.id};render()">✏️</button>
-          <button class="btn-icon danger" onclick="state.confirmDeleteTool=${tool.id};render()">🗑</button>
+          <button class="btn-icon" onclick=\"setEditingTool(\${tool.id})\">✏️</button>
+          <button class="btn-icon danger" onclick=\"setConfirmDeleteTool(\${tool.id})\">🗑</button>
         </div>
       </div>`;
   }).join('')}
@@ -777,7 +777,7 @@ function renderModal() {
   const div = document.createElement('div');
   div.id = 'modal-container';
   div.className = 'modal-backdrop';
-  div.onclick = e => { if(e.target===div){ state.modal=null; render(); } };
+  div.onclick = e => { if(e.target===div){ closeModal(); } };
 
   let inner = '';
   if (state.modal==='addSite') {
@@ -824,7 +824,7 @@ function renderModal() {
   div.innerHTML = `<div class="modal-box" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <span></span>
-      <button onclick="state.modal=null;render()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:20px;">×</button>
+      <button onclick="closeModal()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:20px;">×</button>
     </div>
     ${inner}
   </div>`;
@@ -838,11 +838,11 @@ function renderPwa() {
   const div = document.createElement('div');
   div.id = 'pwa-modal';
   div.className = 'modal-backdrop';
-  div.onclick = e => { if(e.target===div){state.showPwa=false;render();} };
+  div.onclick = e => { if(e.target===div){togglePwa(); } };
   div.innerHTML = `<div class="modal-box" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
       <h3 style="margin:0;font-size:16px;font-weight:800;">📱 ${t().pwaTitle}</h3>
-      <button onclick="state.showPwa=false;render()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:20px;">×</button>
+      <button onclick="togglePwa()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:20px;">×</button>
     </div>
     <div style="background:#1e2235;border-radius:10px;padding:14px;margin-bottom:12px;">
       <div style="font-size:13px;color:#94a3b8;margin-bottom:6px;">🍎 ${t().pwaIos}</div>
@@ -1013,6 +1013,26 @@ function deleteSiteToolNeed(siteId, needId) {
 // ─────────────────────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────────────────────
+// type="module"内の関数はグローバルスコープに公開されないため
+// onclick属性から呼べるようにwindowに登録する
+Object.assign(window, {
+  setLang, setTab, openSite, setSiteSubTab, openModal, togglePwa,
+  submitNotice, submitSite, submitTool, saveToolEdit, deleteTool,
+  submitTask, saveTaskEdit, toggleTask, deleteTask,
+  submitSiteTool, deleteSiteToolNeed,
+  render,
+  // インラインで使うstate操作
+  closeModal: () => { state.modal=null; render(); },
+  setToolFilter: (v) => { state.toolFilter=v; render(); },
+  setSiteView: (v) => { state.siteView=v; render(); },
+  setConfirmDeleteTask: (v) => { state.confirmDeleteTask=v; render(); },
+  setEditingTask: (v) => { state.editingTask=v; render(); },
+  setConfirmDeleteTool: (v) => { state.confirmDeleteTool=v; render(); },
+  setEditingTool: (v) => { state.editingTool=v; render(); },
+  setConfirmDeleteNeed: (v) => { state.confirmDeleteNeed=v; render(); },
+  goBack: () => { state.selectedSite=null; render(); },
+});
+
 function init() {
   render(); // まず画面を表示
   startRealtimeSync(); // Firebaseリアルタイム同期開始
