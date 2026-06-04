@@ -141,6 +141,7 @@ const T = {
     activeSites:'進行中現場', taskProgress:'タスク進捗', toolsInUse:'登録道具',
     siteList:'現場一覧', notices:'お知らせ・連絡',
     noticePh:'全員へ連絡を送る...', send:'送信',
+    senderName:'名前', senderNamePh:'あなたの名前', senderNameSave:'名前を保存',
     addSite:'+ 追加', addSiteTitle:'現場を追加',
     addTool:'+ 登録', addToolTitle:'道具・資材を登録',
     siteName:'現場名', siteNamePh:'例: ○○邸 駐車場工事',
@@ -178,6 +179,7 @@ const T = {
     activeSites:'Active Sites', taskProgress:'Task Progress', toolsInUse:'Tools',
     siteList:'Site List', notices:'Notices & Messages',
     noticePh:'Send a message to everyone...', send:'Send',
+    senderName:'Name', senderNamePh:'Your name', senderNameSave:'Save name',
     addSite:'+ Add', addSiteTitle:'Add New Site',
     addTool:'+ Register', addToolTitle:'Register Tool / Material',
     siteName:'Site Name', siteNamePh:'e.g. Parking Lot Construction',
@@ -259,6 +261,7 @@ let state = {
   newTool:{name:'',count:1,category:''},
   newSiteTool:{toolId:'',qty:1,note:''},
   newNotice:'',
+  senderName: localStorage.getItem('tcrest-sender') || '',
   showPwa: false,
   siteView: 'gantt', // 'gantt' | 'list'
   editingSite: null, // site id being edited
@@ -411,11 +414,19 @@ function renderDashboard() {
   <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px;">
     <h2 class="section-title">${t().notices}</h2>
   </div>
-  <div style="display:flex;gap:8px;margin-bottom:10px;">
+  <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">
+    <div style="position:relative;flex-shrink:0;">
+      <input id="sender-name-input" value="${esc(state.senderName)}" placeholder="${t().senderNamePh}"
+        oninput="saveSenderName(this.value)"
+        style="width:90px;background:#1e2235;border:1px solid ${state.senderName?'#f59e0b44':'#334155'};
+        border-radius:8px;padding:10px 10px;color:#e8eaf0;font-size:13px;outline:none;">
+      <div style="position:absolute;top:-8px;left:6px;font-size:10px;background:#0f1117;padding:0 3px;color:#64748b;">${t().senderName}</div>
+    </div>
     <input id="notice-input" value="${esc(state.newNotice)}" placeholder="${t().noticePh}"
-      onchange="state.newNotice=this.value" onkeydown="if(event.key==='Enter')submitNotice()" style="flex:1;">
-    <button class="btn-primary" onclick="submitNotice()">${t().send}</button>
+      oninput="state.newNotice=this.value" onkeydown="if(event.key==='Enter')submitNotice()" style="flex:1;">
+    <button class="btn-primary" onclick="submitNotice()" ${!state.senderName?'disabled style="opacity:0.5;cursor:not-allowed;"':''}>${t().send}</button>
   </div>
+  ${!state.senderName?`<div style="font-size:11px;color:#f59e0b;margin-bottom:8px;">⚠️ ${state.lang==='en'?'Please enter your name first':'名前を入力してから送信できます'}</div>`:''}
   ${[...state.notices].sort((a,b)=>(b.important?1:0)-(a.important?1:0)).map(n=>`
   <div style="background:${n.important?'#2d1f0a':'#1a1d2e'};border:1px solid ${n.important?'#f59e0b44':'#ffffff11'};
     border-radius:8px;padding:10px 14px;margin-bottom:8px;">
@@ -920,6 +931,11 @@ function setSiteSubTab(tab) { state.siteSubTab=tab; state.confirmDeleteNeed=null
 function openModal(m) { state.modal=m; render(); }
 function togglePwa() { state.showPwa=!state.showPwa; render(); }
 
+function saveSenderName(v) {
+  state.senderName = v.trim();
+  localStorage.setItem('tcrest-sender', state.senderName);
+  render();
+}
 function toggleNoticePin(id) {
   const n = state.notices.find(x=>x.id===id);
   if(n){ n.important=!n.important; syncToShared(); render(); }
@@ -962,7 +978,8 @@ async function submitNotice() {
   const timeStr = state.lang==='en'
     ? now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})
     : `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
-  state.notices.unshift({id,from:'平田',text:txt,textEn:'…',time:timeStr,important:false,translating:true});
+  const from = state.senderName || (state.lang==='en'?'Unknown':'名無し');
+  state.notices.unshift({id,from,text:txt,textEn:'…',time:timeStr,important:false,translating:true});
   state.newNotice='';
   await syncToShared(); render();
   const textEn = await translateToEn(txt);
@@ -1106,7 +1123,7 @@ function deleteSiteToolNeed(siteId, needId) {
 // onclick属性から呼べるようにwindowに登録する
 Object.assign(window, {
   setLang, setTab, openSite, setSiteSubTab, openModal, togglePwa,
-  toggleNoticePin, deleteNotice, openEditSite, saveEditSite,
+  toggleNoticePin, deleteNotice, openEditSite, saveEditSite, saveSenderName,
   setConfirmDeleteNotice: (v) => { state.confirmDeleteNotice=v; render(); },
   submitNotice, submitSite, submitTool, saveToolEdit, deleteTool,
   submitTask, saveTaskEdit, toggleTask, deleteTask,
