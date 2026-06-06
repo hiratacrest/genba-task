@@ -18,13 +18,13 @@ const manifest = {
   display: "standalone",
   background_color: "#0f1117",
   theme_color: "#f59e0b",
-  icons: [{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>",sizes:"192x192",type:"image/svg+xml"}]
+  icons: [{src:"data:image/png;base64,iVBORw0KGgo=",sizes:"192x192",type:"image/png"}]
 };
-const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-const url = URL.createObjectURL(blob);
-const link = document.createElement('link');
-link.rel = 'manifest'; link.href = url;
-document.head.appendChild(link);
+const _mblob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+const _murl = URL.createObjectURL(_mblob);
+const _mlink = document.createElement('link');
+_mlink.rel = 'manifest'; _mlink.href = _murl;
+document.head.appendChild(_mlink);
 </script>
 <style>
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
