@@ -172,6 +172,7 @@ const T = {
     noDate:'日程未設定',
     pin:'固定', unpin:'固定解除', delNotice:'削除',
     editSite:'現場を編集', saveSite:'保存',
+    editToolTitle:'道具・資材を編集',
     pinned:'固定中',
   },
   en: {
@@ -210,6 +211,7 @@ const T = {
     noDate:'No date set',
     pin:'Pin', unpin:'Unpin', delNotice:'Delete',
     editSite:'Edit Site', saveSite:'Save',
+    editToolTitle:'Edit Tool / Material',
     pinned:'Pinned',
   }
 };
@@ -786,22 +788,7 @@ function renderTools() {
             onclick="deleteTool(${tool.id})">${t().del}</button>
         </div>
       </div>`;
-    if (state.editingTool===tool.id) return `
-      <div style="background:#1a2540;border:1px solid #3b82f666;border-radius:10px;padding:14px 16px;margin-bottom:8px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-          <div><label class="field-label">${t().toolName}</label>
-            <input id="edit-tool-name" value="${esc(tool.name)}" style="padding:7px 10px;"></div>
-          <div><label class="field-label">${t().category}</label>
-            <input id="edit-tool-cat" value="${esc(tool.category||'')}" style="padding:7px 10px;"></div>
-        </div>
-        <div style="margin-bottom:10px;"><label class="field-label">${t().total}</label>
-          <input id="edit-tool-count" type="number" min="1" value="${tool.count}" style="padding:7px 10px;width:100px;"></div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-primary" style="padding:7px 16px;font-size:12px;" onclick="saveToolEdit(${tool.id})">${t().save}</button>
-          <button style="padding:7px 12px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-            onclick="setEditingTool(null)">${t().cancel}</button>
-        </div>
-      </div>`;
+
     return `
       <div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
         <div style="width:40px;height:40px;border-radius:8px;background:#1e2a1e;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔧</div>
@@ -874,6 +861,17 @@ function renderModal() {
     <div class="field"><label class="field-label">${t().note}</label>
       <input id="m-snote" placeholder="${t().notePh}"></div>
     <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="submitSiteTool()">${t().addToSite}</button>`;
+  } else if (state.modal==='editTool') {
+    const tool = state.tools.find(x=>x.id===state.editingTool);
+    if (!tool) return;
+    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().editToolTitle}</h3>
+    <div class="field"><label class="field-label">${t().toolName}</label>
+      <input id="et-name" value="${esc(tool.name)}" placeholder="${t().toolNamePh}"></div>
+    <div class="field"><label class="field-label">${t().category}</label>
+      <input id="et-cat" value="${esc(tool.category||'')}" placeholder="${t().categoryPh}"></div>
+    <div class="field"><label class="field-label">${t().total}</label>
+      <input id="et-count" type="number" min="1" value="${tool.count}" style="width:120px;"></div>
+    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="saveToolEdit(${tool.id})">${t().save}</button>`;
   } else if (state.modal==='editSite') {
     const site = siteById(state.editingSite);
     if (!site) return;
@@ -960,6 +958,7 @@ function deleteNotice(id) {
   syncToShared(); render();
 }
 function openEditSite(id) { state.editingSite=id; state.modal='editSite'; render(); }
+function openEditTool(id) { state.editingTool=id; state.modal='editTool'; render(); }
 async function saveEditSite() {
   const site = siteById(state.editingSite);
   if(!site) return;
@@ -1039,18 +1038,22 @@ async function submitTool() {
 }
 
 async function saveToolEdit(id) {
-  const name = document.getElementById('edit-tool-name')?.value.trim();
-  const cat  = document.getElementById('edit-tool-cat')?.value.trim();
-  const count= Number(document.getElementById('edit-tool-count')?.value)||1;
+  const name = document.getElementById('et-name')?.value.trim();
+  const cat  = document.getElementById('et-cat')?.value.trim();
+  const count= Number(document.getElementById('et-count')?.value)||1;
   if(!name) return;
   const tl = state.tools.find(x=>x.id===id);
   if(!tl) return;
-  Object.assign(tl,{name,category:cat,count,nameEn:'…',translating:true});
-  state.editingTool=null;
+  const oldName = tl.name;
+  Object.assign(tl,{name,category:cat,count});
+  state.modal=null; state.editingTool=null;
+  if(name!==oldName){ tl.nameEn='…'; tl.translating=true; }
   await syncToShared(); render();
-  const nameEn = await translateToEn(name);
-  if(tl){tl.nameEn=nameEn;tl.translating=false;}
-  await syncToShared(); render();
+  if(name!==oldName){
+    const nameEn = await translateToEn(name);
+    tl.nameEn=nameEn; tl.translating=false;
+    await syncToShared(); render();
+  }
 }
 
 function deleteTool(id) {
@@ -1135,7 +1138,7 @@ function deleteSiteToolNeed(siteId, needId) {
 // onclick属性から呼べるようにwindowに登録する
 Object.assign(window, {
   setLang, setTab, openSite, setSiteSubTab, openModal, togglePwa,
-  toggleNoticePin, deleteNotice, openEditSite, saveEditSite, saveSenderName,
+  toggleNoticePin, deleteNotice, openEditSite, saveEditSite, saveSenderName, openEditTool,
   setConfirmDeleteNotice: (v) => { state.confirmDeleteNotice=v; render(); },
   submitNotice, submitSite, submitTool, saveToolEdit, deleteTool,
   submitTask, saveTaskEdit, toggleTask, deleteTask,
