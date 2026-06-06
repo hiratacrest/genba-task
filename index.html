@@ -442,9 +442,7 @@ function renderDashboard() {
     </div>
     <input id="notice-input" placeholder="${t().noticePh}"
       onkeydown="if(event.key==='Enter')submitNotice()" style="flex:1;">
-    <button id="notice-send-btn" class="btn-primary" onclick="submitNotice()"
-      ${!state.senderName?'disabled':''}
-      style="${!state.senderName?'opacity:0.5;cursor:not-allowed;':''}">${t().send}</button>
+    <button id="notice-send-btn" class="btn-primary" onclick="submitNotice()" style="opacity:${state.senderName?'1':'0.5'};cursor:${state.senderName?'pointer':'not-allowed'};">${t().send}</button>
   </div>
   <div id="sender-warn" style="font-size:11px;color:#f59e0b;margin-bottom:8px;display:${state.senderName?'none':'block'};">
     ⚠️ ${state.lang==='en'?'Please enter your name first':'名前を入力してから送信できます'}
