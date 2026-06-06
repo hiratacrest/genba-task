@@ -190,6 +190,12 @@ const T = {
     editSite:'現場を編集', saveSite:'保存',
     editToolTitle:'道具・資材を編集',
     pinned:'固定中',
+    pinTask:'タスクを固定', unpinTask:'タスク固定解除',
+    pinTool:'道具を固定', unpinTool:'道具固定解除',
+    pinSite:'現場を固定', unpinSite:'現場固定解除',
+    delTask:'タスクを削除', delTool:'道具を削除', delSite:'現場を削除',
+    delConfirmMsg:'削除しますか？', pinnedCannotDel:'固定解除してから削除できます',
+    editNotice:'編集', editNoticePh:'お知らせを編集...',
   },
   en: {
     appSub:'Site Manager', home:'Home', sites:'Schedule', tools:'Tools',
@@ -229,6 +235,12 @@ const T = {
     editSite:'Edit Site', saveSite:'Save',
     editToolTitle:'Edit Tool / Material',
     pinned:'Pinned',
+    pinTask:'Pin task', unpinTask:'Unpin task',
+    pinTool:'Pin tool', unpinTool:'Unpin tool',
+    pinSite:'Pin site', unpinSite:'Unpin site',
+    delTask:'Delete task', delTool:'Delete tool', delSite:'Delete site',
+    delConfirmMsg:'Delete?', pinnedCannotDel:'Unpin first to delete',
+    editNotice:'Edit', editNoticePh:'Edit notice...',
   }
 };
 
@@ -283,7 +295,9 @@ let state = {
   showPwa: false,
   siteView: 'gantt', // 'gantt' | 'list'
   editingSite: null, // site id being edited
-  confirmDeleteNotice: null, // notice id pending delete confirm
+  confirmDeleteNotice: null,
+  confirmDeleteSite: null,
+  editingNotice: null, // notice id being edited
 };
 
 // Data keys to sync
@@ -469,7 +483,14 @@ function renderDashboard() {
         }
       <\/div>
     <\/div>
-    <div style="font-size:14px;">${noticeDisplay(n)}<\/div>
+    ${state.editingNotice===n.id
+      ? `<div style="display:flex;gap:6px;margin-top:6px;">
+          <input id="edit-notice-input-${n.id}" value="${esc(n.text)}" style="flex:1;padding:6px 10px;font-size:13px;" onkeydown="if(event.key==='Enter')saveNoticeEdit(${n.id});if(event.key==='Escape'){state.editingNotice=null;render();}">
+          <button onclick="saveNoticeEdit(${n.id})" style="background:#f59e0b;border:none;border-radius:6px;color:#0f1117;cursor:pointer;font-size:11px;padding:4px 10px;font-weight:700;">${t().save}<\/button>
+          <button onclick="cancelNoticeEdit()" style="background:none;border:1px solid #334155;border-radius:6px;color:#94a3b8;cursor:pointer;font-size:11px;padding:4px 8px;">${t().cancel}<\/button>
+        <\/div>`
+      : `<div style="font-size:14px;">${noticeDisplay(n)}<\/div>`
+    }
   <\/div>`).join('')}`;
 }
 
@@ -958,6 +979,42 @@ function deleteNotice(id) {
   syncToShared(); render();
 }
 function openEditSite(id) { state.editingSite=id; state.modal='editSite'; render(); }
+function toggleSitePin(id) {
+  const s = state.sites.find(x=>x.id===id);
+  if(s){ s.pinned=!s.pinned; syncToShared(); render(); }
+}
+function deleteSite(id) {
+  const s = state.sites.find(x=>x.id===id);
+  if(s && s.pinned) return;
+  state.sites = state.sites.filter(x=>x.id!==id);
+  state.confirmDeleteSite=null;
+  if(state.selectedSite===id) state.selectedSite=null;
+  syncToShared(); render();
+}
+function toggleTaskPin(siteId, taskId) {
+  const site = siteById(siteId);
+  const task = site?.tasks.find(x=>x.id===taskId);
+  if(task){ task.pinned=!task.pinned; syncToShared(); render(); }
+}
+function toggleToolPin(id) {
+  const tl = state.tools.find(x=>x.id===id);
+  if(tl){ tl.pinned=!tl.pinned; syncToShared(); render(); }
+}
+function startNoticeEdit(id) { state.editingNotice=id; render(); }
+function cancelNoticeEdit() { state.editingNotice=null; render(); }
+async function saveNoticeEdit(id) {
+  const el = document.getElementById('edit-notice-input-'+id);
+  const txt = el?.value.trim();
+  if(!txt) return;
+  const n = state.notices.find(x=>x.id===id);
+  if(!n) return;
+  n.text=txt; n.textEn='...'; n.translating=true;
+  state.editingNotice=null;
+  await syncToShared(); render();
+  const textEn = await translateToEn(txt);
+  n.textEn=textEn; n.translating=false;
+  await syncToShared(); render();
+}
 function openEditTool(id) { state.editingTool=id; state.modal='editTool'; render(); }
 async function saveEditSite() {
   const site = siteById(state.editingSite);
@@ -1139,6 +1196,9 @@ function deleteSiteToolNeed(siteId, needId) {
 Object.assign(window, {
   setLang, setTab, openSite, setSiteSubTab, openModal, togglePwa,
   toggleNoticePin, deleteNotice, openEditSite, saveEditSite, saveSenderName, openEditTool,
+  toggleSitePin, deleteSite, toggleTaskPin, toggleToolPin,
+  startNoticeEdit, cancelNoticeEdit, saveNoticeEdit,
+  setConfirmDeleteSite: (v) => { state.confirmDeleteSite=v; render(); },
   setConfirmDeleteNotice: (v) => { state.confirmDeleteNotice=v; render(); },
   submitNotice, submitSite, submitTool, saveToolEdit, deleteTool,
   submitTask, saveTaskEdit, toggleTask, deleteTask,
