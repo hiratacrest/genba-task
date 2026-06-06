@@ -331,16 +331,16 @@ function siteById(id) { return state.sites.find(s=>s.id===id); }
 function toolById(id) { return state.tools.find(t=>t.id===id); }
 function nameDisplay(obj) {
   if (!obj) return '';
-  if (state.lang==='en') return obj.translating ? `<span class="translating">🔄 ${t().translating}</span>` : esc(obj.nameEn||obj.name);
+  if (state.lang==='en') return obj.translating ? `<span class="translating">🔄 ${t().translating}<\/span>` : esc(obj.nameEn||obj.name);
   return esc(obj.name);
 }
 function textDisplay(obj) {
   if (!obj) return '';
-  if (state.lang==='en') return obj.translating ? `<span class="translating">🔄 ${t().translating}</span>` : esc(obj.textEn||obj.text);
+  if (state.lang==='en') return obj.translating ? `<span class="translating">🔄 ${t().translating}<\/span>` : esc(obj.textEn||obj.text);
   return esc(obj.text);
 }
 function noticeDisplay(n) {
-  if (state.lang==='en') return n.translating ? `<span class="translating">🔄 ${t().translating}</span>` : esc(n.textEn||n.text);
+  if (state.lang==='en') return n.translating ? `<span class="translating">🔄 ${t().translating}<\/span>` : esc(n.textEn||n.text);
   return esc(n.text);
 }
 function dateStr() {
@@ -357,19 +357,19 @@ function renderHeader() {
   document.getElementById('header').innerHTML = `
   <div style="background:linear-gradient(135deg,#1a1d2e,#12151f);border-bottom:2px solid #f59e0b; padding:0 16px;display:flex;align-items:center;justify-content:space-between; height:56px;position:sticky;top:0;z-index:100;">
     <div style="display:flex;align-items:center;gap:10px;">
-      <div style="width:32px;height:32px;background:#f59e0b;display:flex;align-items:center; justify-content:center;font-size:18px;font-weight:900;color:#0f1117; clip-path:polygon(10% 0%,90% 0%,100% 50%,90% 100%,10% 100%,0% 50%);">T</div>
-      <span style="font-weight:800;font-size:17px;letter-spacing:2px;color:#f8fafc;">T-CREST</span>
-      <span style="font-size:11px;color:#94a3b8;letter-spacing:1px;margin-left:4px;">${t().appSub}</span>
-      <span class="sync-dot ${dotClass}" title="${dotTitle}"></span>
-    </div>
+      <div style="width:32px;height:32px;background:#f59e0b;display:flex;align-items:center; justify-content:center;font-size:18px;font-weight:900;color:#0f1117; clip-path:polygon(10% 0%,90% 0%,100% 50%,90% 100%,10% 100%,0% 50%);">T<\/div>
+      <span style="font-weight:800;font-size:17px;letter-spacing:2px;color:#f8fafc;">T-CREST<\/span>
+      <span style="font-size:11px;color:#94a3b8;letter-spacing:1px;margin-left:4px;">${t().appSub}<\/span>
+      <span class="sync-dot ${dotClass}" title="${dotTitle}"><\/span>
+    <\/div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <span style="font-size:10px;color:#64748b;display:none;" id="date-str">${dateStr()}</span>
-      <button onclick="togglePwa()" style="background:transparent;border:1px solid #334155;border-radius:6px; color:#64748b;cursor:pointer;padding:4px 8px;font-size:10px;" title="${t().pwaTitle}">📱</button>
+      <span style="font-size:10px;color:#64748b;display:none;" id="date-str">${dateStr()}<\/span>
+      <button onclick="togglePwa()" style="background:transparent;border:1px solid #334155;border-radius:6px; color:#64748b;cursor:pointer;padding:4px 8px;font-size:10px;" title="${t().pwaTitle}">📱<\/button>
       <div style="display:flex;background:#1e2235;border-radius:20px;overflow:hidden;border:1px solid #334155;">
-        ${['ja','en'].map(l=>`<button onclick="setLang('${l}')" style="padding:4px 10px;border:none;cursor:pointer; font-size:11px;font-weight:700;background:${state.lang===l?'#f59e0b':'transparent'}; color:${state.lang===l?'#0f1117':'#64748b'};">${l.toUpperCase()}</button>`).join('')}
-      </div>
-    </div>
-  </div>`;
+        ${['ja','en'].map(l=>`<button onclick="setLang('${l}')" style="padding:4px 10px;border:none;cursor:pointer; font-size:11px;font-weight:700;background:${state.lang===l?'#f59e0b':'transparent'}; color:${state.lang===l?'#0f1117':'#64748b'};">${l.toUpperCase()}<\/button>`).join('')}
+      <\/div>
+    <\/div>
+  <\/div>`;
 }
 
 function renderNav() {
@@ -380,9 +380,9 @@ function renderNav() {
   ];
   document.getElementById('bottom-nav').innerHTML = items.map(item=>`
     <button class="nav-btn ${state.tab===item.id?'active':''}" onclick="setTab('${item.id}')">
-      <span class="nav-icon">${item.icon}</span>
-      <span class="nav-label" style="font-weight:${state.tab===item.id?700:400}">${item.label}</span>
-    </button>`).join('');
+      <span class="nav-icon">${item.icon}<\/span>
+      <span class="nav-label" style="font-weight:${state.tab===item.id?700:400}">${item.label}<\/span>
+    <\/button>`).join('');
 }
 
 function renderMain() {
@@ -411,66 +411,66 @@ function renderDashboard() {
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;">
     ${cards.map(c=>`
     <div style="background:linear-gradient(135deg,#1e2235,#161926);border:1px solid ${c.color}33; border-top:3px solid ${c.color};border-radius:10px;padding:14px 12px;text-align:center;">
-      <div style="font-size:22px;">${c.icon}</div>
-      <div style="font-size:22px;font-weight:900;color:${c.color};line-height:1.2;">${c.value}</div>
-      <div style="font-size:11px;color:#94a3b8;margin-top:2px;">${c.label}</div>
-    </div>`).join('')}
-  </div>
+      <div style="font-size:22px;">${c.icon}<\/div>
+      <div style="font-size:22px;font-weight:900;color:${c.color};line-height:1.2;">${c.value}<\/div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:2px;">${c.label}<\/div>
+    <\/div>`).join('')}
+  <\/div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <h2 class="section-title">${t().siteList}</h2>
-    <button class="btn-secondary" onclick="openModal('addSite')">${t().addSite}</button>
-  </div>
+    <h2 class="section-title">${t().siteList}<\/h2>
+    <button class="btn-secondary" onclick="openModal('addSite')">${t().addSite}<\/button>
+  <\/div>
   ${state.sites.map(s=>renderSiteCard(s,true)).join('')}
   <div style="display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px;">
-    <h2 class="section-title">${t().notices}</h2>
-  </div>
+    <h2 class="section-title">${t().notices}<\/h2>
+  <\/div>
   <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center;">
     <div style="position:relative;flex-shrink:0;">
       <input id="sender-name-input" value="${esc(state.senderName)}" placeholder="${t().senderNamePh}"
         oninput="saveSenderName(this.value)"
         style="width:90px;background:#1e2235;border:1px solid ${state.senderName?'#f59e0b44':'#334155'}; border-radius:8px;padding:10px 10px;color:#e8eaf0;font-size:13px;outline:none;">
-      <div style="position:absolute;top:-8px;left:6px;font-size:10px;background:#0f1117;padding:0 3px;color:#64748b;">${t().senderName}</div>
-    </div>
+      <div style="position:absolute;top:-8px;left:6px;font-size:10px;background:#0f1117;padding:0 3px;color:#64748b;">${t().senderName}<\/div>
+    <\/div>
     <input id="notice-input" placeholder="${t().noticePh}"
       onkeydown="if(event.key==='Enter')submitNotice()" style="flex:1;">
-    <button id="notice-send-btn" class="btn-primary" onclick="submitNotice()" style="opacity:${state.senderName?'1':'0.5'};cursor:${state.senderName?'pointer':'not-allowed'};">${t().send}</button>
-  </div>
+    <button id="notice-send-btn" class="btn-primary" onclick="submitNotice()" style="opacity:${state.senderName?'1':'0.5'};cursor:${state.senderName?'pointer':'not-allowed'};">${t().send}<\/button>
+  <\/div>
   <div id="sender-warn" style="font-size:11px;color:#f59e0b;margin-bottom:8px;display:${state.senderName?'none':'block'};">
     ⚠️ ${state.lang==='en'?'Please enter your name first':'名前を入力してから送信できます'}
-  </div>
+  <\/div>
   ${[...state.notices].sort((a,b)=>(b.important?1:0)-(a.important?1:0)).map(n=>`
   <div style="background:${n.important?'#2d1f0a':'#1a1d2e'};border:1px solid ${n.important?'#f59e0b44':'#ffffff11'}; border-radius:8px;padding:10px 14px;margin-bottom:8px;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
       <div style="display:flex;align-items:center;gap:6px;">
-        <span style="font-size:12px;font-weight:700;color:${n.important?'#f59e0b':'#94a3b8'};">${n.important?'📌 ':''}${esc(n.from)}</span>
-        ${n.important?`<span style="font-size:10px;background:#f59e0b22;color:#f59e0b;padding:1px 6px;border-radius:10px;">${t().pinned}</span>`:''}
-      </div>
+        <span style="font-size:12px;font-weight:700;color:${n.important?'#f59e0b':'#94a3b8'};">${n.important?'📌 ':''}${esc(n.from)}<\/span>
+        ${n.important?`<span style="font-size:10px;background:#f59e0b22;color:#f59e0b;padding:1px 6px;border-radius:10px;">${t().pinned}<\/span>`:''}
+      <\/div>
       <div style="display:flex;align-items:center;gap:6px;">
-        <span style="font-size:11px;color:#475569;">${esc(n.time)}</span>
+        <span style="font-size:11px;color:#475569;">${esc(n.time)}<\/span>
         <button onclick="toggleNoticePin(${n.id})" title="${n.important?t().unpin:t().pin}"
           style="background:none;border:1px solid ${n.important?'#f59e0b44':'#334155'};border-radius:5px; color:${n.important?'#f59e0b':'#475569'};cursor:pointer;font-size:12px;padding:2px 6px;white-space:nowrap;">
           ${n.important?'📌':'📍'}
-        </button>
+        <\/button>
         ${n.important
           ? `<button title="${state.lang==='en'?'Unpin to delete':'固定解除してから削除できます'}"
-              style="background:none;border:1px solid #334155;border-radius:5px; color:#334155;cursor:not-allowed;font-size:12px;padding:2px 6px;opacity:0.4;">🗑</button>`
+              style="background:none;border:1px solid #334155;border-radius:5px; color:#334155;cursor:not-allowed;font-size:12px;padding:2px 6px;opacity:0.4;">🗑<\/button>`
           : state.confirmDeleteNotice===n.id
             ? `<span style="display:flex;align-items:center;gap:4px;">
-                <span style="font-size:11px;color:#fca5a5;">${state.lang==='en'?'Delete?':'削除しますか？'}</span>
+                <span style="font-size:11px;color:#fca5a5;">${state.lang==='en'?'Delete?':'削除しますか？'}<\/span>
                 <button onclick="deleteNotice(${n.id})"
                   style="background:#ef4444;border:none;border-radius:5px;color:#fff;cursor:pointer;font-size:11px;padding:2px 8px;font-weight:700;">
-                  ${state.lang==='en'?'Yes':'はい'}</button>
+                  ${state.lang==='en'?'Yes':'はい'}<\/button>
                 <button onclick="setConfirmDeleteNotice(null)"
                   style="background:none;border:1px solid #334155;border-radius:5px;color:#94a3b8;cursor:pointer;font-size:11px;padding:2px 8px;">
-                  ${state.lang==='en'?'No':'いいえ'}</button>
-              </span>`
+                  ${state.lang==='en'?'No':'いいえ'}<\/button>
+              <\/span>`
             : `<button onclick="setConfirmDeleteNotice(${n.id})" title="${t().delNotice}"
-                style="background:none;border:1px solid #ef444433;border-radius:5px; color:#ef4444;cursor:pointer;font-size:12px;padding:2px 6px;">🗑</button>`
+                style="background:none;border:1px solid #ef444433;border-radius:5px; color:#ef4444;cursor:pointer;font-size:12px;padding:2px 6px;">🗑<\/button>`
         }
-      </div>
-    </div>
-    <div style="font-size:14px;">${noticeDisplay(n)}</div>
-  </div>`).join('')}`;
+      <\/div>
+    <\/div>
+    <div style="font-size:14px;">${noticeDisplay(n)}<\/div>
+  <\/div>`).join('')}`;
 }
 
 function renderSiteCard(site, clickable=false) {
@@ -478,29 +478,29 @@ function renderSiteCard(site, clickable=false) {
   const color = siteColor(site.status);
   const label = sl(site.status);
   const nameHtml = state.lang==='en'
-    ? (site.translating ? `<span class="translating">🔄 ${t().translating}</span>` : esc(site.nameEn||site.name))
+    ? (site.translating ? `<span class="translating">🔄 ${t().translating}<\/span>` : esc(site.nameEn||site.name))
     : esc(site.name);
   const onclick = clickable ? `onclick="openSite(${site.id})"` : `onclick="openSite(${site.id})"`;
   return `
   <div class="card" style="border-left:4px solid ${color};cursor:pointer;" ${onclick}>
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
       <div style="flex:1;margin-right:8px;">
-        <div style="font-weight:700;font-size:15px;">${nameHtml}</div>
-        <div style="font-size:12px;color:#64748b;margin-top:2px;">📍 ${esc(site.location)}</div>
-      </div>
-      <span class="chip" style="background:${color}22;color:${color};border:1px solid ${color}44;">${esc(label)}</span>
-    </div>
+        <div style="font-weight:700;font-size:15px;">${nameHtml}<\/div>
+        <div style="font-size:12px;color:#64748b;margin-top:2px;">📍 ${esc(site.location)}<\/div>
+      <\/div>
+      <span class="chip" style="background:${color}22;color:${color};border:1px solid ${color}44;">${esc(label)}<\/span>
+    <\/div>
     <div style="display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-bottom:8px;">
-      <span>📅 ${esc(site.startDate)} – ${esc(site.endDate)}</span>
+      <span>📅 ${esc(site.startDate)} – ${esc(site.endDate)}<\/span>
       <span>${site.tasks.filter(tk=>tk.done).length}/${site.tasks.length} ${t().done}</span>
-    </div>
+    <\/div>
     <div class="progress-bar">
-      <div class="progress-fill" style="width:${prog}%;background:linear-gradient(90deg,${color},${color}aa);"></div>
-    </div>
+      <div class="progress-fill" style="width:${prog}%;background:linear-gradient(90deg,${color},${color}aa);"><\/div>
+    <\/div>
     <div style="display:flex;justify-content:flex-end;margin-top:8px;" onclick="event.stopPropagation()">
-      <button onclick="openEditSite(${site.id})" style="background:transparent;border:1px solid #334155;border-radius:6px; color:#64748b;cursor:pointer;font-size:11px;padding:3px 10px;">✏️ ${state.lang==='en'?'Edit':'編集'}</button>
-    </div>
-  </div>`;
+      <button onclick="openEditSite(${site.id})" style="background:transparent;border:1px solid #334155;border-radius:6px; color:#64748b;cursor:pointer;font-size:11px;padding:3px 10px;">✏️ ${state.lang==='en'?'Edit':'編集'}<\/button>
+    <\/div>
+  <\/div>`;
 }
 
 // -------------------------------------------------------------
@@ -509,17 +509,17 @@ function renderSiteCard(site, clickable=false) {
 function renderSites() {
   if (!state.selectedSite) return `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <h2 class="section-title">${t().sitesMgmt}</h2>
-      <button class="btn-primary" onclick="openModal('addSite')">${t().addSite}</button>
-    </div>
+      <h2 class="section-title">${t().sitesMgmt}<\/h2>
+      <button class="btn-primary" onclick="openModal('addSite')">${t().addSite}<\/button>
+    <\/div>
     <div style="display:flex;background:#1a1d2e;border-radius:10px;padding:4px;margin-bottom:14px;gap:4px;">
       <button class="subtab-btn ${state.siteView==='gantt'?'active':''}" onclick="setSiteView('gantt')">
         📅 ${t().gantt}
-      </button>
+      <\/button>
       <button class="subtab-btn ${state.siteView==='list'?'active':''}" onclick="setSiteView('list')">
         📋 ${t().list}
-      </button>
-    </div>
+      <\/button>
+    <\/div>
     ${state.siteView==='gantt' ? renderGantt() : state.sites.map(s=>renderSiteCard(s)).join('')}`;
   const site = siteById(state.selectedSite);
   if (!site) return '';
@@ -527,7 +527,7 @@ function renderSites() {
 }
 
 function renderGantt() {
-  if (!state.sites.length) return `<div class="empty-state"><div style="font-size:30px;margin-bottom:8px;">📅</div><div style="color:#64748b;font-size:13px;">${t().addSite}から現場を追加してください</div></div>`;
+  if (!state.sites.length) return `<div class="empty-state"><div style="font-size:30px;margin-bottom:8px;">📅<\/div><div style="color:#64748b;font-size:13px;">${t().addSite}から現場を追加してください</div><\/div>`;
 
   // : start/end 
   const today = new Date(); today.setHours(0,0,0,0);
@@ -553,7 +553,7 @@ function renderGantt() {
     const isFirst = d.getDate()===1;
     const cls = `gantt-day-head${isToday?' today':''}${isFirst?' month-start':''}`;
     const label = isFirst ? `${d.getMonth()+1}/${d.getDate()}` : (d.getDate()%5===0?`${d.getDate()}`:'');
-    return `<th class="${cls}">${label}</th>`;
+    return `<th class="${cls}">${label}<\/th>`;
   }).join('');
 
   // 
@@ -583,29 +583,29 @@ function renderGantt() {
     const cells = days.map((d,i) => {
       const isToday = d.getTime()===today.getTime();
       const isFirst = d.getDate()===1;
-      return `<td class="gantt-cell${isToday?' today-col':''}${isFirst?' month-start':''}"></td>`;
+      return `<td class="gantt-cell${isToday?' today-col':''}${isFirst?' month-start':''}"><\/td>`;
     }).join('');
 
     // first tdabsolutetddiv  tablewrapper
     return `<tr class="gantt-row">
-      <td class="gantt-label" onclick="openSite(${site.id})" title="${esc(site.name)}">${nameHtml}</td>
+      <td class="gantt-label" onclick="openSite(${site.id})" title="${esc(site.name)}">${nameHtml}<\/td>
       <td colspan="${totalDays}" style="position:relative;padding:0;height:30px;">
         <div style="display:flex;height:100%;">
           ${days.map((d,i)=>{
             const isToday=d.getTime()===today.getTime();
             const isFirst=d.getDate()===1;
-            return `<div style="width:24px;min-width:24px;height:100%;border-left:1px solid ${isFirst?'#334155':'#1e2235'};background:${isToday?'#f59e0b08':'transparent'};flex-shrink:0;position:relative;"></div>`;
+            return `<div style="width:24px;min-width:24px;height:100%;border-left:1px solid ${isFirst?'#334155':'#1e2235'};background:${isToday?'#f59e0b08':'transparent'};flex-shrink:0;position:relative;"><\/div>`;
           }).join('')}
-        </div>
-        ${barStyle ? `<div class="gantt-bar" style="${barStyle}">${barLabel}</div>` : ''}
+        <\/div>
+        ${barStyle ? `<div class="gantt-bar" style="${barStyle}">${barLabel}<\/div>` : ''}
         ${(() => {
           // today line
           const ti = days.findIndex(d=>d.getTime()===today.getTime());
           if (ti<0) return '';
-          return `<div style="position:absolute;top:0;bottom:0;left:${ti*24+12}px;width:2px;background:#f59e0b;opacity:.5;pointer-events:none;"></div>`;
+          return `<div style="position:absolute;top:0;bottom:0;left:${ti*24+12}px;width:2px;background:#f59e0b;opacity:.5;pointer-events:none;"><\/div>`;
         })()}
-      </td>
-    </tr>`;
+      <\/td>
+    <\/tr>`;
   }).join('');
 
   return `
@@ -614,25 +614,25 @@ function renderGantt() {
       <table class="gantt-table" style="table-layout:fixed;">
         <thead>
           <tr>
-            <th style="width:130px;min-width:130px;"></th>
+            <th style="width:130px;min-width:130px;"><\/th>
             ${headCells}
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
+          <\/tr>
+        <\/thead>
+        <tbody>${rows}<\/tbody>
+      <\/table>
+    <\/div>
     <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">
       ${['進行中','予定','完了','中断'].map(s=>`
         <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#94a3b8;">
-          <div style="width:10px;height:10px;border-radius:2px;background:${STATUS_COLOR[s]};"></div>
+          <div style="width:10px;height:10px;border-radius:2px;background:${STATUS_COLOR[s]};"><\/div>
           ${sl(s)}
-        </div>`).join('')}
+        <\/div>`).join('')}
       <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#94a3b8;">
-        <div style="width:10px;height:10px;border-radius:1px;background:#f59e0b;opacity:.5;"></div>
+        <div style="width:10px;height:10px;border-radius:1px;background:#f59e0b;opacity:.5;"><\/div>
         ${state.lang==='en'?'Today':'今日'}
-      </div>
-    </div>
-  </div>`;
+      <\/div>
+    <\/div>
+  <\/div>`;
 }
 
 function renderSiteDetail(site) {
@@ -640,33 +640,33 @@ function renderSiteDetail(site) {
   const color = siteColor(site.status);
   const label = sl(site.status);
   const nameHtml = state.lang==='en'
-    ? (site.translating ? `<span class="translating">🔄 ${t().translating}</span>` : esc(site.nameEn||site.name))
+    ? (site.translating ? `<span class="translating">🔄 ${t().translating}<\/span>` : esc(site.nameEn||site.name))
     : esc(site.name);
   return `
   <button style="background:none;border:none;color:#f59e0b;cursor:pointer;font-size:14px;margin-bottom:12px;padding:0;display:flex;align-items:center;gap:4px;"
-    onclick="goBack()">${t().backToList}</button>
+    onclick="goBack()">${t().backToList}<\/button>
   <div style="background:linear-gradient(135deg,#1e2235,#161926);border-radius:12px;padding:16px;margin-bottom:14px;border-left:4px solid ${color};">
     <div style="display:flex;justify-content:space-between;">
-      <h2 style="font-size:16px;font-weight:800;flex:1;margin-right:8px;">${nameHtml}</h2>
-      <span class="chip" style="background:${color}22;color:${color};">${esc(label)}</span>
-    </div>
-    <div style="font-size:12px;color:#64748b;margin:6px 0;">📍 ${esc(site.location)}</div>
-    <div style="font-size:12px;color:#64748b;margin-bottom:10px;">📅 ${esc(site.startDate)} – ${esc(site.endDate)}</div>
+      <h2 style="font-size:16px;font-weight:800;flex:1;margin-right:8px;">${nameHtml}<\/h2>
+      <span class="chip" style="background:${color}22;color:${color};">${esc(label)}<\/span>
+    <\/div>
+    <div style="font-size:12px;color:#64748b;margin:6px 0;">📍 ${esc(site.location)}<\/div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:10px;">📅 ${esc(site.startDate)} – ${esc(site.endDate)}<\/div>
     <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
-      <span>${t().progress}</span><span style="font-weight:700;color:#f59e0b;">${prog}%</span>
-    </div>
+      <span>${t().progress}<\/span><span style="font-weight:700;color:#f59e0b;">${prog}%</span>
+    <\/div>
     <div class="progress-bar" style="height:8px;">
-      <div class="progress-fill" style="width:${prog}%;background:linear-gradient(90deg,#f59e0b,#f97316);"></div>
-    </div>
-  </div>
+      <div class="progress-fill" style="width:${prog}%;background:linear-gradient(90deg,#f59e0b,#f97316);"><\/div>
+    <\/div>
+  <\/div>
   <div class="subtab-bar">
     <button class="subtab-btn ${state.siteSubTab==='tasks'?'active':''}" onclick="setSiteSubTab('tasks')">
       📋 ${state.lang==='en'?'Tasks':'作業タスク'}
-    </button>
+    <\/button>
     <button class="subtab-btn ${state.siteSubTab==='tools'?'active':''}" onclick="setSiteSubTab('tools')">
       🔧 ${state.lang==='en'?'Tools':'必要道具'}
-    </button>
-  </div>
+    <\/button>
+  <\/div>
   ${state.siteSubTab==='tasks' ? renderTaskList(site) : renderSiteToolList(site)}`;
 }
 
@@ -675,41 +675,41 @@ function renderTaskList(site) {
   <div style="display:flex;gap:8px;margin-bottom:12px;">
     <input id="task-input" placeholder="${t().taskPh}"
       onkeydown="if(event.key==='Enter')submitTask(${site.id})" style="flex:1;">
-    <button class="btn-primary" onclick="submitTask(${site.id})">${t().addTaskBtn}</button>
-  </div>
+    <button class="btn-primary" onclick="submitTask(${site.id})">${t().addTaskBtn}<\/button>
+  <\/div>
   ${site.tasks.map(task => {
     if (state.confirmDeleteTask===task.id) return `
       <div class="confirm-bar">
-        <span style="font-size:13px;color:#fca5a5;">${t().delConfirm}</span>
+        <span style="font-size:13px;color:#fca5a5;">${t().delConfirm}<\/span>
         <div style="display:flex;gap:6px;">
           <button style="padding:5px 12px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-            onclick="setConfirmDeleteTask(null)">${t().cancel}</button>
+            onclick="setConfirmDeleteTask(null)">${t().cancel}<\/button>
           <button style="padding:5px 12px;border-radius:6px;border:none;background:#ef4444;color:#fff;cursor:pointer;font-size:12px;font-weight:700;"
-            onclick="deleteTask(${site.id},${task.id})">${t().del}</button>
-        </div>
-      </div>`;
+            onclick="deleteTask(${site.id},${task.id})">${t().del}<\/button>
+        <\/div>
+      <\/div>`;
     if (state.editingTask===task.id) return `
       <div class="edit-bar">
         <input id="edit-task-input" value="${esc(state.lang==='en'?(task.textEn||task.text):task.text)}"
           onkeydown="if(event.key==='Enter')saveTaskEdit(${site.id},${task.id});if(event.key==='Escape'){state.editingTask=null;render();}"
           style="flex:1;padding:6px 10px;">
         <button class="btn-primary" style="padding:6px 12px;font-size:12px;"
-          onclick="saveTaskEdit(${site.id},${task.id})">${t().save}</button>
+          onclick="saveTaskEdit(${site.id},${task.id})">${t().save}<\/button>
         <button style="padding:6px 10px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-          onclick="setEditingTask(null)">${t().cancel}</button>
-      </div>`;
+          onclick="setEditingTask(null)">${t().cancel}<\/button>
+      <\/div>`;
     return `
       <div class="task-row" style="background:${task.done?'#0d1f0d':'#1a1d2e'};border:1px solid ${task.done?'#22c55e33':'#ffffff11'};">
-        <div class="checkbox ${task.done?'done':''}" onclick="toggleTask(${site.id},${task.id})">${task.done?'✓':''}</div>
+        <div class="checkbox ${task.done?'done':''}" onclick="toggleTask(${site.id},${task.id})">${task.done?'✓':''}<\/div>
         <span style="flex:1;font-size:14px;font-weight:500;text-decoration:${task.done?'line-through':'none'};color:${task.done?'#475569':'#e8eaf0'};">
           ${textDisplay(task)}
-        </span>
-        ${task.assignee?`<span style="font-size:11px;color:#94a3b8;background:#1e2235;padding:2px 8px;border-radius:20px;white-space:nowrap;">${esc(task.assignee)}</span>`:''}
+        <\/span>
+        ${task.assignee?`<span style="font-size:11px;color:#94a3b8;background:#1e2235;padding:2px 8px;border-radius:20px;white-space:nowrap;">${esc(task.assignee)}<\/span>`:''}
         <div style="display:flex;gap:4px;flex-shrink:0;">
-          <button class="btn-icon" onclick=\"setEditingTask(\${task.id})\" title="${t().edit}">✏️</button>
-          <button class="btn-icon danger" onclick=\"setConfirmDeleteTask(\${task.id})\" title="${t().del}">🗑</button>
-        </div>
-      </div>`;
+          <button class="btn-icon" onclick=\"setEditingTask(\${task.id})\" title="${t().edit}">✏️<\/button>
+          <button class="btn-icon danger" onclick=\"setConfirmDeleteTask(\${task.id})\" title="${t().del}">🗑<\/button>
+        <\/div>
+      <\/div>`;
   }).join('')}`;
 }
 
@@ -717,42 +717,42 @@ function renderSiteToolList(site) {
   const needs = site.toolNeeds||[];
   const addedIds = new Set(needs.map(n=>n.toolId));
   const avail = state.tools.filter(tl=>!addedIds.has(tl.id));
-  if (!state.tools.length) return `<div class="empty-state"><div style="font-size:30px;margin-bottom:8px;">🔧</div><div style="color:#64748b;font-size:13px;">${t().toolMasterEmpty}</div></div>`;
+  if (!state.tools.length) return `<div class="empty-state"><div style="font-size:30px;margin-bottom:8px;">🔧<\/div><div style="color:#64748b;font-size:13px;">${t().toolMasterEmpty}</div><\/div>`;
   return `
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <span style="font-size:13px;color:#94a3b8;">${t().siteToolsDesc}</span>
-    ${avail.length?`<button class="btn-secondary" onclick="openModal('addSiteTool')">${t().addSiteTool}</button>`:''}
-  </div>
-  ${!needs.length ? `<div class="empty-state"><div style="font-size:30px;margin-bottom:8px;">📦</div>
-    <div style="color:#64748b;font-size:13px;margin-bottom:12px;">${t().noSiteTools}</div>
-    ${avail.length?`<button class="btn-primary" onclick="openModal('addSiteTool')">${t().addSiteTool}</button>`:''}</div>` :
+    <span style="font-size:13px;color:#94a3b8;">${t().siteToolsDesc}<\/span>
+    ${avail.length?`<button class="btn-secondary" onclick="openModal('addSiteTool')">${t().addSiteTool}<\/button>`:''}
+  <\/div>
+  ${!needs.length ? `<div class="empty-state"><div style="font-size:30px;margin-bottom:8px;">📦<\/div>
+    <div style="color:#64748b;font-size:13px;margin-bottom:12px;">${t().noSiteTools}<\/div>
+    ${avail.length?`<button class="btn-primary" onclick="openModal('addSiteTool')">${t().addSiteTool}<\/button>`:''}</div>` :
   needs.map(need => {
     const tm = toolById(need.toolId);
     if (!tm) return '';
     if (state.confirmDeleteNeed===need.id) return `
       <div class="confirm-bar">
-        <span style="font-size:13px;color:#fca5a5;">${t().delConfirm}</span>
+        <span style="font-size:13px;color:#fca5a5;">${t().delConfirm}<\/span>
         <div style="display:flex;gap:6px;">
           <button style="padding:5px 12px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-            onclick="setConfirmDeleteNeed(null)">${t().cancel}</button>
+            onclick="setConfirmDeleteNeed(null)">${t().cancel}<\/button>
           <button style="padding:5px 12px;border-radius:6px;border:none;background:#ef4444;color:#fff;cursor:pointer;font-size:12px;font-weight:700;"
-            onclick="deleteSiteToolNeed(${site.id},${need.id})">${t().del}</button>
-        </div>
-      </div>`;
+            onclick="deleteSiteToolNeed(${site.id},${need.id})">${t().del}<\/button>
+        <\/div>
+      <\/div>`;
     return `
       <div class="card" style="display:flex;align-items:center;gap:12px;">
-        <div style="width:40px;height:40px;border-radius:8px;background:#1e2a1e;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔧</div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#1e2a1e;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔧<\/div>
         <div style="flex:1;">
-          <div style="font-weight:700;font-size:14px;">${nameDisplay(tm)}</div>
-          ${tm.category?`<div style="font-size:12px;color:#64748b;">${esc(tm.category)}</div>`:''}
-          ${need.note?`<div style="font-size:12px;color:#94a3b8;margin-top:2px;">📝 ${esc(need.note)}</div>`:''}
-        </div>
+          <div style="font-weight:700;font-size:14px;">${nameDisplay(tm)}<\/div>
+          ${tm.category?`<div style="font-size:12px;color:#64748b;">${esc(tm.category)}<\/div>`:''}
+          ${need.note?`<div style="font-size:12px;color:#94a3b8;margin-top:2px;">📝 ${esc(need.note)}<\/div>`:''}
+        <\/div>
         <div style="text-align:right;margin-right:8px;">
-          <div style="font-size:20px;font-weight:900;color:#f59e0b;">${need.qty}</div>
-          <div style="font-size:10px;color:#64748b;">${t().needed}</div>
-        </div>
-        <button class="btn-icon danger" onclick=\"setConfirmDeleteNeed(\${need.id})\">🗑</button>
-      </div>`;
+          <div style="font-size:20px;font-weight:900;color:#f59e0b;">${need.qty}<\/div>
+          <div style="font-size:10px;color:#64748b;">${t().needed}<\/div>
+        <\/div>
+        <button class="btn-icon danger" onclick=\"setConfirmDeleteNeed(\${need.id})\">🗑<\/button>
+      <\/div>`;
   }).join('')}`;
 }
 
@@ -764,49 +764,49 @@ function renderTools() {
   const filtered = state.toolFilter==='__all__' ? state.tools : state.tools.filter(tl=>tl.category===state.toolFilter);
   return `
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-    <h2 class="section-title">${t().toolsMgmt}</h2>
-    <button class="btn-primary" onclick="openModal('addTool')">${t().addTool}</button>
-  </div>
+    <h2 class="section-title">${t().toolsMgmt}<\/h2>
+    <button class="btn-primary" onclick="openModal('addTool')">${t().addTool}<\/button>
+  <\/div>
   ${!state.tools.length ? `<div class="empty-state">
-    <div style="font-size:36px;margin-bottom:12px;">🔧</div>
-    <div style="color:#94a3b8;font-size:14px;margin-bottom:16px;">${t().noTools}</div>
-    <button class="btn-primary" onclick="openModal('addTool')">${t().addTool}</button>
-  </div>` : `
+    <div style="font-size:36px;margin-bottom:12px;">🔧<\/div>
+    <div style="color:#94a3b8;font-size:14px;margin-bottom:16px;">${t().noTools}<\/div>
+    <button class="btn-primary" onclick="openModal('addTool')">${t().addTool}<\/button>
+  <\/div>` : `
   ${cats.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
-    <button class="filter-btn ${state.toolFilter==='__all__'?'active':''}" onclick="setToolFilter('__all__')">${t().all}</button>
-    ${cats.map(c=>`<button class="filter-btn ${state.toolFilter===c?'active':''}" onclick=\"setToolFilter('${esc(c)}')\">${esc(c)}</button>`).join('')}
-  </div>`:''}
+    <button class="filter-btn ${state.toolFilter==='__all__'?'active':''}" onclick="setToolFilter('__all__')">${t().all}<\/button>
+    ${cats.map(c=>`<button class="filter-btn ${state.toolFilter===c?'active':''}" onclick=\"setToolFilter('${esc(c)}')\">${esc(c)}<\/button>`).join('')}
+  <\/div>`:''}
   <div>
   ${filtered.map(tool => {
     if (state.confirmDeleteTool===tool.id) return `
       <div class="confirm-bar" style="border-radius:10px;margin-bottom:8px;">
-        <span style="font-size:13px;color:#fca5a5;">${t().delToolConfirm}</span>
+        <span style="font-size:13px;color:#fca5a5;">${t().delToolConfirm}<\/span>
         <div style="display:flex;gap:6px;">
           <button style="padding:5px 12px;border-radius:6px;border:1px solid #334155;background:transparent;color:#94a3b8;cursor:pointer;font-size:12px;"
-            onclick="setConfirmDeleteTool(null)">${t().cancel}</button>
+            onclick="setConfirmDeleteTool(null)">${t().cancel}<\/button>
           <button style="padding:5px 12px;border-radius:6px;border:none;background:#ef4444;color:#fff;cursor:pointer;font-size:12px;font-weight:700;"
-            onclick="deleteTool(${tool.id})">${t().del}</button>
-        </div>
-      </div>`;
+            onclick="deleteTool(${tool.id})">${t().del}<\/button>
+        <\/div>
+      <\/div>`;
 
     return `
       <div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-        <div style="width:40px;height:40px;border-radius:8px;background:#1e2a1e;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔧</div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#1e2a1e;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔧<\/div>
         <div style="flex:1;">
-          <div style="font-weight:700;font-size:14px;">${nameDisplay(tool)}</div>
-          ${tool.category?`<div style="font-size:12px;color:#64748b;">${esc(tool.category)}</div>`:''}
-        </div>
+          <div style="font-weight:700;font-size:14px;">${nameDisplay(tool)}<\/div>
+          ${tool.category?`<div style="font-size:12px;color:#64748b;">${esc(tool.category)}<\/div>`:''}
+        <\/div>
         <div style="text-align:right;margin-right:8px;">
-          <div style="font-size:18px;font-weight:900;color:#e8eaf0;">${tool.count}</div>
-          <div style="font-size:10px;color:#64748b;">${t().total}</div>
-        </div>
+          <div style="font-size:18px;font-weight:900;color:#e8eaf0;">${tool.count}<\/div>
+          <div style="font-size:10px;color:#64748b;">${t().total}<\/div>
+        <\/div>
         <div style="display:flex;gap:4px;flex-shrink:0;">
-          <button class="btn-icon" onclick=\"setEditingTool(\${tool.id})\">✏️</button>
-          <button class="btn-icon danger" onclick=\"setConfirmDeleteTool(\${tool.id})\">🗑</button>
-        </div>
-      </div>`;
+          <button class="btn-icon" onclick=\"setEditingTool(\${tool.id})\">✏️<\/button>
+          <button class="btn-icon danger" onclick=\"setConfirmDeleteTool(\${tool.id})\">🗑<\/button>
+        <\/div>
+      <\/div>`;
   }).join('')}
-  </div>`}`;
+  <\/div>`}`;
 }
 
 // -------------------------------------------------------------
@@ -824,79 +824,79 @@ function renderModal() {
   let inner = '';
   if (state.modal==='addSite') {
     const statuses = ['予定','進行中','完了','中断'];
-    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().addSiteTitle}</h3>
-    <div class="field"><label class="field-label">${t().siteName}</label>
-      <input id="m-name" placeholder="${t().siteNamePh}"></div>
-    <div class="field"><label class="field-label">${t().address}</label>
-      <input id="m-location" placeholder="${t().addressPh}"></div>
+    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().addSiteTitle}<\/h3>
+    <div class="field"><label class="field-label">${t().siteName}<\/label>
+      <input id="m-name" placeholder="${t().siteNamePh}"><\/div>
+    <div class="field"><label class="field-label">${t().address}<\/label>
+      <input id="m-location" placeholder="${t().addressPh}"><\/div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <div><label class="field-label">${t().startDate}</label><input id="m-start" type="date"></div>
-      <div><label class="field-label">${t().endDate}</label><input id="m-end" type="date"></div>
-    </div>
-    <div class="field"><label class="field-label">${t().status}</label>
-      <select id="m-status">${statuses.map(s=>`<option value="${s}">${state.lang==='en'?t().types[s]:s}</option>`).join('')}</select></div>
-    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="submitSite()">${t().add}</button>`;
+      <div><label class="field-label">${t().startDate}<\/label><input id="m-start" type="date"></div>
+      <div><label class="field-label">${t().endDate}<\/label><input id="m-end" type="date"></div>
+    <\/div>
+    <div class="field"><label class="field-label">${t().status}<\/label>
+      <select id="m-status">${statuses.map(s=>`<option value="${s}">${state.lang==='en'?t().types[s]:s}<\/option>`).join('')}</select><\/div>
+    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="submitSite()">${t().add}<\/button>`;
   } else if (state.modal==='addTool') {
-    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().addToolTitle}</h3>
-    <div class="field"><label class="field-label">${t().toolName}</label>
-      <input id="m-tname" placeholder="${t().toolNamePh}"></div>
-    <div class="field"><label class="field-label">${t().category}</label>
-      <input id="m-tcat" placeholder="${t().categoryPh}"></div>
-    <div class="field"><label class="field-label">${t().total}</label>
-      <input id="m-tcount" type="number" min="1" value="1" style="width:120px;"></div>
-    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="submitTool()">${t().register}</button>`;
+    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().addToolTitle}<\/h3>
+    <div class="field"><label class="field-label">${t().toolName}<\/label>
+      <input id="m-tname" placeholder="${t().toolNamePh}"><\/div>
+    <div class="field"><label class="field-label">${t().category}<\/label>
+      <input id="m-tcat" placeholder="${t().categoryPh}"><\/div>
+    <div class="field"><label class="field-label">${t().total}<\/label>
+      <input id="m-tcount" type="number" min="1" value="1" style="width:120px;"><\/div>
+    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="submitTool()">${t().register}<\/button>`;
   } else if (state.modal==='addSiteTool') {
     const site = siteById(state.selectedSite);
     if (!site) return;
     const addedIds = new Set((site.toolNeeds||[]).map(n=>n.toolId));
     const avail = state.tools.filter(tl=>!addedIds.has(tl.id));
-    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().addSiteTool}</h3>
-    <div class="field"><label class="field-label">${t().selectTool}</label>
+    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().addSiteTool}<\/h3>
+    <div class="field"><label class="field-label">${t().selectTool}<\/label>
       <select id="m-stool">
-        <option value="">${state.lang==='en'?'-- Select --':'-- 選択してください --'}</option>
-        ${avail.map(tl=>`<option value="${tl.id}">${state.lang==='en'?(tl.nameEn||tl.name):tl.name}${tl.category?` (${tl.category})`:''}</option>`).join('')}
-      </select></div>
-    <div class="field"><label class="field-label">${t().qty}</label>
-      <input id="m-sqty" type="number" min="1" value="1" style="width:120px;"></div>
-    <div class="field"><label class="field-label">${t().note}</label>
-      <input id="m-snote" placeholder="${t().notePh}"></div>
-    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="submitSiteTool()">${t().addToSite}</button>`;
+        <option value="">${state.lang==='en'?'-- Select --':'-- 選択してください --'}<\/option>
+        ${avail.map(tl=>`<option value="${tl.id}">${state.lang==='en'?(tl.nameEn||tl.name):tl.name}${tl.category?` (${tl.category})`:''}<\/option>`).join('')}
+      <\/select></div>
+    <div class="field"><label class="field-label">${t().qty}<\/label>
+      <input id="m-sqty" type="number" min="1" value="1" style="width:120px;"><\/div>
+    <div class="field"><label class="field-label">${t().note}<\/label>
+      <input id="m-snote" placeholder="${t().notePh}"><\/div>
+    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="submitSiteTool()">${t().addToSite}<\/button>`;
   } else if (state.modal==='editTool') {
     const tool = state.tools.find(x=>x.id===state.editingTool);
     if (!tool) return;
-    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().editToolTitle}</h3>
-    <div class="field"><label class="field-label">${t().toolName}</label>
-      <input id="et-name" value="${esc(tool.name)}" placeholder="${t().toolNamePh}"></div>
-    <div class="field"><label class="field-label">${t().category}</label>
-      <input id="et-cat" value="${esc(tool.category||'')}" placeholder="${t().categoryPh}"></div>
-    <div class="field"><label class="field-label">${t().total}</label>
-      <input id="et-count" type="number" min="1" value="${tool.count}" style="width:120px;"></div>
-    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="saveToolEdit(${tool.id})">${t().save}</button>`;
+    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().editToolTitle}<\/h3>
+    <div class="field"><label class="field-label">${t().toolName}<\/label>
+      <input id="et-name" value="${esc(tool.name)}" placeholder="${t().toolNamePh}"><\/div>
+    <div class="field"><label class="field-label">${t().category}<\/label>
+      <input id="et-cat" value="${esc(tool.category||'')}" placeholder="${t().categoryPh}"><\/div>
+    <div class="field"><label class="field-label">${t().total}<\/label>
+      <input id="et-count" type="number" min="1" value="${tool.count}" style="width:120px;"><\/div>
+    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="saveToolEdit(${tool.id})">${t().save}<\/button>`;
   } else if (state.modal==='editSite') {
     const site = siteById(state.editingSite);
     if (!site) return;
     const statuses = ['予定','進行中','完了','中断'];
-    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().editSite}</h3>
-    <div class="field"><label class="field-label">${t().siteName}</label>
-      <input id="es-name" value="${esc(site.name)}" placeholder="${t().siteNamePh}"></div>
-    <div class="field"><label class="field-label">${t().address}</label>
-      <input id="es-location" value="${esc(site.location)}" placeholder="${t().addressPh}"></div>
+    inner = `<h3 style="margin:0 0 16px;font-size:16px;font-weight:800;">${t().editSite}<\/h3>
+    <div class="field"><label class="field-label">${t().siteName}<\/label>
+      <input id="es-name" value="${esc(site.name)}" placeholder="${t().siteNamePh}"><\/div>
+    <div class="field"><label class="field-label">${t().address}<\/label>
+      <input id="es-location" value="${esc(site.location)}" placeholder="${t().addressPh}"><\/div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <div><label class="field-label">${t().startDate}</label><input id="es-start" type="date" value="${esc(site.startDate||'')}"></div>
-      <div><label class="field-label">${t().endDate}</label><input id="es-end" type="date" value="${esc(site.endDate||'')}"></div>
-    </div>
-    <div class="field"><label class="field-label">${t().status}</label>
-      <select id="es-status">${statuses.map(s=>`<option value="${s}" ${site.status===s?'selected':''}>${state.lang==='en'?t().types[s]:s}</option>`).join('')}</select></div>
-    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="saveEditSite()">${t().saveSite}</button>`;
+      <div><label class="field-label">${t().startDate}<\/label><input id="es-start" type="date" value="${esc(site.startDate||'')}"></div>
+      <div><label class="field-label">${t().endDate}<\/label><input id="es-end" type="date" value="${esc(site.endDate||'')}"></div>
+    <\/div>
+    <div class="field"><label class="field-label">${t().status}<\/label>
+      <select id="es-status">${statuses.map(s=>`<option value="${s}" ${site.status===s?'selected':''}>${state.lang==='en'?t().types[s]:s}<\/option>`).join('')}</select><\/div>
+    <button class="btn-primary" style="width:100%;margin-top:4px;" onclick="saveEditSite()">${t().saveSite}<\/button>`;
   }
 
   div.innerHTML = `<div class="modal-box" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <span></span>
-      <button onclick="closeModal()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:20px;">×</button>
-    </div>
+      <span><\/span>
+      <button onclick="closeModal()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:20px;">×<\/button>
+    <\/div>
     ${inner}
-  </div>`;
+  <\/div>`;
   document.body.appendChild(div);
 }
 
@@ -910,16 +910,16 @@ function renderPwa() {
   div.onclick = e => { if(e.target===div){togglePwa(); } };
   div.innerHTML = `<div class="modal-box" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <h3 style="margin:0;font-size:16px;font-weight:800;">📱 ${t().pwaTitle}</h3>
-      <button onclick="togglePwa()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:20px;">×</button>
-    </div>
+      <h3 style="margin:0;font-size:16px;font-weight:800;">📱 ${t().pwaTitle}<\/h3>
+      <button onclick="togglePwa()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:20px;">×<\/button>
+    <\/div>
     <div style="background:#1e2235;border-radius:10px;padding:14px;margin-bottom:12px;">
-      <div style="font-size:13px;color:#94a3b8;margin-bottom:6px;">🍎 ${t().pwaIos}</div>
-    </div>
+      <div style="font-size:13px;color:#94a3b8;margin-bottom:6px;">🍎 ${t().pwaIos}<\/div>
+    <\/div>
     <div style="background:#1e2235;border-radius:10px;padding:14px;">
-      <div style="font-size:13px;color:#94a3b8;">🤖 ${t().pwaAndroid}</div>
-    </div>
-  </div>`;
+      <div style="font-size:13px;color:#94a3b8;">🤖 ${t().pwaAndroid}<\/div>
+    <\/div>
+  <\/div>`;
   document.body.appendChild(div);
 }
 
@@ -1162,6 +1162,6 @@ function init() {
 }
 
 init();
-</script>
+</script></script>
 </body>
 </html>
