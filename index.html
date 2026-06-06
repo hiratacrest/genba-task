@@ -10,9 +10,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <title>T-CREST 現場管理</title>
 <script>
-// PWA manifest を動的に生成（404エラー回避）
+// Generate PWA manifest dynamically (avoid 404 error)
 const manifest = {
-  name: "T-CREST 現場管理",
+  name: "T-CREST",
   short_name: "T-CREST",
   start_url: "./",
   display: "standalone",
@@ -91,9 +91,9 @@ document.head.appendChild(_mlink);
 <nav id="bottom-nav"></nav>
 
 <script type="module">
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // FIREBASE CONFIG
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
@@ -130,11 +130,11 @@ function startRealtimeSync() {
   onValue(ref(db, DB_PATH), (snapshot) => {
     const remote = snapshot.val();
     if (!remote) {
-      // 初回: 初期データをFirebaseに保存
+      // : Firebase
       saveShared(getSharedData());
       return;
     }
-    // 自分が書き込み中でなければ反映
+    // 
     if (!isSyncing) {
       applySharedData(remote);
       render();
@@ -148,9 +148,9 @@ async function syncToShared() {
   isSyncing = false;
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // i18n
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 const T = {
   ja: {
     appSub:'現場管理', home:'ホーム', sites:'工程表', tools:'道具管理',
@@ -239,9 +239,9 @@ const STATUS_COLOR = {
   '中断':'#ef4444','On Hold':'#ef4444',
 };
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // APP STATE
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 let state = {
   lang: 'ja',
   tab: 'dashboard',
@@ -298,9 +298,9 @@ function applySharedData(d) {
   SYNC_KEYS.forEach(k => { if(d[k] !== undefined) state[k] = d[k]; });
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // TRANSLATE
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 async function translateToEn(jaText) {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -316,13 +316,13 @@ async function translateToEn(jaText) {
   } catch(e){ return jaText; }
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // SYNC (Firebase handles this above)
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // HELPERS
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 const t = () => T[state.lang];
 function sl(s) { return state.lang==='en' ? (t().types[s]||s) : s; }
 function siteColor(s) { const lbl=sl(s); return STATUS_COLOR[lbl]||STATUS_COLOR[s]||'#64748b'; }
@@ -348,9 +348,9 @@ function dateStr() {
   return new Date().toLocaleDateString(state.lang==='en'?'en-US':'ja-JP',opts);
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // RENDER HELPERS
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 function renderHeader() {
   const dotClass = syncStatus==='syncing'?'syncing':syncStatus==='error'?'error':'';
   const dotTitle = syncStatus==='syncing'?t().syncing:syncStatus==='error'?t().syncErr:t().synced;
@@ -396,9 +396,9 @@ function renderMain() {
 
 function render() { renderHeader(); renderNav(); renderMain(); }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // DASHBOARD
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 function renderDashboard() {
   const allTasks = state.sites.flatMap(s=>s.tasks);
   const done = allTasks.filter(tk=>tk.done).length;
@@ -503,9 +503,9 @@ function renderSiteCard(site, clickable=false) {
   </div>`;
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // SITES
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 function renderSites() {
   if (!state.selectedSite) return `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -529,23 +529,23 @@ function renderSites() {
 function renderGantt() {
   if (!state.sites.length) return `<div class="empty-state"><div style="font-size:30px;margin-bottom:8px;">📅</div><div style="color:#64748b;font-size:13px;">${t().addSite}から現場を追加してください</div></div>`;
 
-  // 表示範囲: 全現場のstart/endを包含する月 ±少し余白
+  // : start/end 
   const today = new Date(); today.setHours(0,0,0,0);
   let minD = new Date(today); let maxD = new Date(today);
   state.sites.forEach(s => {
     if (s.startDate) { const d=new Date(s.startDate); if(d<minD) minD=d; }
     if (s.endDate)   { const d=new Date(s.endDate);   if(d>maxD) maxD=d; }
   });
-  // 月の先頭〜末尾に揃える + 前後1週間余白
+  //  + 1
   minD = new Date(minD); minD.setDate(minD.getDate()-7);
   maxD = new Date(maxD); maxD.setDate(maxD.getDate()+7);
-  // 日配列を生成
+  // 
   const days = [];
   for (let d=new Date(minD); d<=maxD; d.setDate(d.getDate()+1)) days.push(new Date(d));
   const totalDays = days.length;
 
-  // ヘッダー行(日付)
-  const monthLabels = {}; // col index → month label
+  // ()
+  const monthLabels = {}; // col index  month label
   days.forEach((d,i) => { if(d.getDate()===1) monthLabels[i]=`${d.getMonth()+1}月`; });
 
   const headCells = days.map((d,i) => {
@@ -556,14 +556,14 @@ function renderGantt() {
     return `<th class="${cls}">${label}</th>`;
   }).join('');
 
-  // 各現場の行
+  // 
   const rows = state.sites.map(site => {
     const color = siteColor(site.status);
     const nameHtml = state.lang==='en'
       ? (site.translating?`…`:esc(site.nameEn||site.name))
       : esc(site.name);
 
-    // バーの位置計算
+    // 
     let barStyle = '';
     let barLabel = '';
     if (site.startDate && site.endDate) {
@@ -579,14 +579,14 @@ function renderGantt() {
       }
     }
 
-    // 今日の列のtd
+    // td
     const cells = days.map((d,i) => {
       const isToday = d.getTime()===today.getTime();
       const isFirst = d.getDate()===1;
       return `<td class="gantt-cell${isToday?' today-col':''}${isFirst?' month-start':''}"></td>`;
     }).join('');
 
-    // バーはfirst tdにabsoluteで乗せるためtd群をdivで包む → tableの制約があるのでwrapperを使う
+    // first tdabsolutetddiv  tablewrapper
     return `<tr class="gantt-row">
       <td class="gantt-label" onclick="openSite(${site.id})" title="${esc(site.name)}">${nameHtml}</td>
       <td colspan="${totalDays}" style="position:relative;padding:0;height:30px;">
@@ -756,9 +756,9 @@ function renderSiteToolList(site) {
   }).join('')}`;
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // TOOLS MASTER
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 function renderTools() {
   const cats = [...new Set(state.tools.map(tl=>tl.category).filter(Boolean))];
   const filtered = state.toolFilter==='__all__' ? state.tools : state.tools.filter(tl=>tl.category===state.toolFilter);
@@ -809,9 +809,9 @@ function renderTools() {
   </div>`}`;
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // MODAL
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 function renderModal() {
   let existing = document.getElementById('modal-container');
   if (existing) existing.remove();
@@ -923,9 +923,9 @@ function renderPwa() {
   document.body.appendChild(div);
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // ACTIONS
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 function setLang(l) { state.lang=l; render(); }
 function setTab(tab) { state.tab=tab; state.selectedSite=null; state.modal=null; render(); }
 function openSite(id) { state.selectedSite=id; state.tab='sites'; state.siteSubTab='tasks'; render(); }
@@ -936,7 +936,7 @@ function togglePwa() { state.showPwa=!state.showPwa; render(); }
 function saveSenderName(v) {
   state.senderName = v.trim();
   localStorage.setItem('tcrest-sender', state.senderName);
-  // 送信ボタンの状態だけ更新（re-renderしない）
+  // re-render
   const btn = document.getElementById('notice-send-btn');
   const warn = document.getElementById('sender-warn');
   if(btn) {
@@ -952,7 +952,7 @@ function toggleNoticePin(id) {
 }
 function deleteNotice(id) {
   const n = state.notices.find(x=>x.id===id);
-  if(n && n.important) return; // ピン止め中は削除不可
+  if(n && n.important) return; // 
   state.notices = state.notices.filter(x=>x.id!==id);
   state.confirmDeleteNotice=null;
   syncToShared(); render();
@@ -1131,11 +1131,11 @@ function deleteSiteToolNeed(siteId, needId) {
   syncToShared(); render();
 }
 
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // INIT
-// ─────────────────────────────────────────────────────────────
-// type="module"内の関数はグローバルスコープに公開されないため
-// onclick属性から呼べるようにwindowに登録する
+// -------------------------------------------------------------
+// type="module"
+// onclickwindow
 Object.assign(window, {
   setLang, setTab, openSite, setSiteSubTab, openModal, togglePwa,
   toggleNoticePin, deleteNotice, openEditSite, saveEditSite, saveSenderName, openEditTool,
@@ -1144,7 +1144,7 @@ Object.assign(window, {
   submitTask, saveTaskEdit, toggleTask, deleteTask,
   submitSiteTool, deleteSiteToolNeed,
   render,
-  // インラインで使うstate操作
+  // state
   closeModal: () => { state.modal=null; render(); },
   setToolFilter: (v) => { state.toolFilter=v; render(); },
   setSiteView: (v) => { state.siteView=v; render(); },
@@ -1157,8 +1157,8 @@ Object.assign(window, {
 });
 
 function init() {
-  render(); // まず画面を表示
-  startRealtimeSync(); // Firebaseリアルタイム同期開始
+  render(); // 
+  startRealtimeSync(); // Firebase
 }
 
 init();
