@@ -310,6 +310,15 @@ function getSharedData() {
 }
 function applySharedData(d) {
   SYNC_KEYS.forEach(k => { if(d[k] !== undefined) state[k] = d[k]; });
+  // sanitize: ensure arrays and required fields exist
+  state.sites = (state.sites||[]).map(s => ({
+    ...s,
+    tasks: (s.tasks||[]).map(tk => ({done:false, assignee:'', text:'', textEn:'', ...tk})),
+    toolNeeds: s.toolNeeds||[],
+    nameEn: s.nameEn||s.name||'',
+  }));
+  state.tools = (state.tools||[]).map(tl => ({count:1, nameEn:'', category:'', ...tl}));
+  state.notices = (state.notices||[]).map(n => ({important:false, text:'', textEn:'', from:'', time:'', ...n}));
 }
 
 // -------------------------------------------------------------
